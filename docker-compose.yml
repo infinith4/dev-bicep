@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    container_name: dev-bicep
+    container_name: dev-bicep-azd
     build: 
       context: .
       dockerfile: Dockerfile
@@ -10,6 +10,7 @@ services:
     #   - 3200:4200
     tty: true
     volumes:
+      - ${HOME}/.ssh:/root/.ssh
       - type: bind
         source: .
         target: /src
