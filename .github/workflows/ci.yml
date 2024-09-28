@@ -2,6 +2,9 @@ name: Deploy Python project to Azure Function App
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - develop
 
 env:
   AZURE_FUNCTIONAPP_NAME: 'func-dev-pj'   # set this to your function app name on Azure
