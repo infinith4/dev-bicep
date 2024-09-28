@@ -52,7 +52,7 @@ jobs:
       with:
         name : python-app
         path : |
-          release.zip
+          ./release.zip
           !venv/
     - name : make artifact
       id: artifact-name
