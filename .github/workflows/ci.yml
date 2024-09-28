@@ -12,17 +12,23 @@ env:
   PYTHON_VERSION: '3.11'                     # set this to the python version to use (e.g. '3.6', '3.7', '3.8')
 
 jobs:
-  build-and-deploy:
+  build-application:
     runs-on: ubuntu-22.04
     environment: dev
+    outputs:
+      artifact-name: ${{ steps.artifact-name.outputs.artifact}}
+    defaults:
+      run:
+        working-directory: ./app/func
     steps:
     - name: 'Checkout GitHub Action'
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
+        architecture: 'x64'
 
     - name: 'Resolve Project Dependencies Using Pip'
       shell: bash
@@ -42,3 +48,17 @@ jobs:
         path : |
           release.zip
           !venv/
+    - name : make artifact
+      id: artifact-name
+      run: |
+        echo "artifact=python-app" >> $GITHUB_OUTPUT
+# cd workflow
+  call-deploy:
+    needs: 
+      [
+        build-application
+      ]
+    uses: ./github/workflows/cd.yml
+    secrets: inherit
+    with:
+      artifact_name: ${{needs.build-application.outputs.artifact-name}}
