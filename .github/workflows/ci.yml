@@ -58,7 +58,7 @@ jobs:
       [
         build-application
       ]
-    uses: .github/workflows/cd.yml
+    uses: ./.github/workflows/cd.yml
     secrets: inherit
     with:
       artifact_name: ${{needs.build-application.outputs.artifact-name}}
