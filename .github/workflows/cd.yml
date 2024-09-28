@@ -2,6 +2,9 @@ name: Deploy Python project to Azure Function App
 
 on:
   workflow_call:
+  push:
+    branches:
+      - develop
 
 jobs:
   deploy:
