@@ -29,20 +29,38 @@ source ~/.bashrc
 
 az version
 
+```
 az login
+```
 
+```
 az group create --name rg-iac-bicep --location japaneast
+```
 
-az deployment group create --resource-group rg-iac-bicep --template-file main.bicep
+```
+az deployment group create \
+  --name rg-iac-bicep-dev-deploy \
+  --resource-group rg-iac-bicep \
+  --mode Complete \
+  --confirm-with-what-if \
+  --template-file main.bicep \
+  --parameters location='japaneast' enviromentName='dev' workloadName='pj'
+```
 
 
 az group list
 
+```
 az group delete --name rg-iac-bicep
+```
 
 az group list
 
 az group show --name rg-iac-bicep
 
 
+
+## 略語
+
+https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations
 
