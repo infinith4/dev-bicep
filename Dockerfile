@@ -1,1 +1,1 @@
-FROM mcr.microsoft.com/azure-cli:2.63.0
+FROM --platform=linux/amd64 mcr.microsoft.com/devcontainers/python:3.10-bullseye
