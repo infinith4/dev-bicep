@@ -18,6 +18,10 @@ jobs:
     runs-on: ubuntu-22.04
     environment: dev
     steps:
+      - name: Display structure
+        shell: bash
+        run: ls -R
+
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
