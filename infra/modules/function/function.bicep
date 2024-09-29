@@ -3,7 +3,7 @@ param location string
 param tags object = {}
 param functionName string
 param storageAccountName string
-param appInsightsName string
+param appInsightsInstrumentationKey string
 
 // Get Storage Account Reference
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
@@ -14,9 +14,9 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' existing = {
   name: hostingPlanName
 }
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
-  name: appInsightsName
-}
+// resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
+//   name: appInsightsName
+// }
 
 resource site 'Microsoft.Web/sites@2022-03-01' = {
   name: functionName
@@ -38,6 +38,10 @@ resource site 'Microsoft.Web/sites@2022-03-01' = {
           name: 'AzureWebJobsStorage'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccount.listKeys().keys[0].value}'
         }
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsightsInstrumentationKey
+        }
       ]
       linuxFxVersion: 'Python|3.11' //az webapp list-runtimes --linux || az functionapp list-runtimes --os linux -o table
       // ftpsState: 'FtpsOnly'
@@ -48,7 +52,4 @@ resource site 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: hostingPlan.id
     clientAffinityEnabled: false
   }
-  dependsOn: [
-    appInsights
-  ]
 }

@@ -16,3 +16,6 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
     publicNetworkAccessForQuery: 'Enabled'
   }
 }
+
+output appInsightsInstrumentationKey string = appInsights.properties.InstrumentationKey
+

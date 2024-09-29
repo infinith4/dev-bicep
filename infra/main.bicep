@@ -78,6 +78,6 @@ module function 'modules/function/function.bicep' = {
     tags: tags
     hostingPlanName: hostingPlan.outputs.name
     storageAccountName: storage.outputs.storageAccountName
-    appInsightsName: appInsights.name
+    appInsightsInstrumentationKey: appInsights.outputs.appInsightsInstrumentationKey
   }
 }
