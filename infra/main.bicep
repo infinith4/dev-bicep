@@ -10,8 +10,14 @@ param location string = resourceGroup().location
 param enviromentName string = 'dev'
 var enviromentResourceNameWithoutHyphen = replace(enviromentName, '-', '')
 
+@allowed(['eastasia', 'eastus'])
+param hostingPlanLocation string = 'eastasia'
+
 @description('The workload name. Replaces {workloadName} in namingConvention.')
 param workloadName string = 'pj'
+
+param deploymentStorageContainerName string = 'testcontainer'
+
 
 var suffixResourceName = '-${workloadName}'
 var suffixResourceNameWithoutHyphen = replace(suffixResourceName, '-', '')
@@ -55,29 +61,55 @@ module storage 'modules/storage/storage.bicep' = {
   }
 }
 
+// var aspSku = {
+//   tier: 'Standard'
+//   name: 'S1'
+// }
+
+var aspSku = {
+  tier: 'FlexConsumption'
+  name: 'FC1'
+}
+
 
 module hostingPlan 'modules/host/asp.bicep' = {
   name: 'hostingPlan'
   params:{
     hostingPlanName: '${abbrs.webServerFarms}${enviromentName}${suffixResourceName}'
-    location: location
+    location: !empty(hostingPlanLocation) ? hostingPlanLocation : location
     tags: tags
-    sku: {
-      tier: 'Standard'
-      name: 'S1'
-    }
-    kind: 'linux'
+    sku: aspSku
+    kind: 'functionapp,linux'
   }
 }
 
-module function 'modules/function/function.bicep' = {
+module function 'modules/function/function.bicep' = if(aspSku.tier == 'Standard'){
   name: 'function'
   params:{
     functionName: '${abbrs.webSitesFunctions}${enviromentName}${suffixResourceName}'
-    location: location
+    location: hostingPlanLocation
     tags: tags
     hostingPlanName: hostingPlan.outputs.name
     storageAccountName: storage.outputs.storageAccountName
     appInsightsInstrumentationKey: appInsights.outputs.appInsightsInstrumentationKey
+    
   }
 }
+
+module flexFunction 'modules/function/flexFunction.bicep' = if(aspSku.tier == 'FlexConsumption'){
+  name: 'flexFunction'
+  params:{
+    functionName: '${abbrs.webSitesFunctions}${enviromentName}-flex${suffixResourceName}'
+    location: hostingPlanLocation
+    tags: tags
+    hostingPlanName: hostingPlan.outputs.name
+    storageAccountName: storage.outputs.storageAccountName
+    applicationInsightsName: appInsights.outputs.appInsightsName
+    functionAppRuntime: 'python'
+    functionAppRuntimeVersion: '3.11'
+    functionNameComputed: 'MyTestEventGridTrigger01'
+    deploymentStorageContainerName: deploymentStorageContainerName
+  }
+}
+
+

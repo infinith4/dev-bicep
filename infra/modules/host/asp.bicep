@@ -7,7 +7,7 @@ param kind string = 'linux'
 
 
 //https://github.com/Azure/azure-quickstart-templates/blob/master/quickstarts/microsoft.web/app-function/main.bicep
-resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+resource hostingPlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: hostingPlanName
   location: location
   tags: tags
