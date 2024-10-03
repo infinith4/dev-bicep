@@ -44,6 +44,10 @@ resource flexFuncApp 'Microsoft.Web/sites@2023-12-01' = {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsights.properties.ConnectionString
         }
+        {
+          name: 'WEBSITE_RUN_FROM_PACKAGE'
+          value: '0'
+        }
       ]
     }
     functionAppConfig: {
@@ -66,6 +70,9 @@ resource flexFuncApp 'Microsoft.Web/sites@2023-12-01' = {
       }
     }
   }
+  dependsOn:[
+    appInsights
+  ]
 }
 
 var storageRoleDefinitionId  = 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b' //Storage Blob Data Owner role

@@ -4,9 +4,10 @@ param tags object = {}
 param functionName string
 param storageAccountName string
 param appInsightsInstrumentationKey string
+param applicationInsightsName string
 
 // Get Storage Account Reference
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-06-01' existing = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
   name: storageAccountName
 }
 
@@ -14,9 +15,9 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' existing = {
   name: hostingPlanName
 }
 
-// resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
-//   name: appInsightsName
-// }
+resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
+  name: applicationInsightsName
+}
 
 resource site 'Microsoft.Web/sites@2022-03-01' = {
   name: functionName
@@ -52,4 +53,7 @@ resource site 'Microsoft.Web/sites@2022-03-01' = {
     serverFarmId: hostingPlan.id
     clientAffinityEnabled: false
   }
+  dependsOn:[
+    appInsights
+  ]
 }

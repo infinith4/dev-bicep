@@ -91,6 +91,7 @@ module function 'modules/function/function.bicep' = if(aspSku.tier == 'Standard'
     tags: tags
     hostingPlanName: hostingPlan.outputs.name
     storageAccountName: storage.outputs.storageAccountName
+    applicationInsightsName: appInsights.outputs.appInsightsName
     appInsightsInstrumentationKey: appInsights.outputs.appInsightsInstrumentationKey
     
   }

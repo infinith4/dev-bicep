@@ -19,7 +19,7 @@ param tags object = {}
 @description('The name of the storage account')
 param storageAccountName string
 
-resource sa 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+resource sa 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: storageAccountName
   location: location
   tags: tags
