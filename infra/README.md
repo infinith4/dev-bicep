@@ -44,7 +44,7 @@ az deployment group create \
   --mode Complete \
   --confirm-with-what-if \
   --template-file main.bicep \
-  --parameters location='japaneast' enviromentName='dev' workloadName='pj'
+  --parameters ./main.parameters.dev.json
 ```
 
 

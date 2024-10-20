@@ -9,7 +9,6 @@ param functionAppRuntime string = 'python'
 param functionAppRuntimeVersion string = '3.11'
 param maximumInstanceCount int = 100
 param instanceMemoryMB int = 2048
-param functionNameComputed string = 'MyTestEventGridTrigger'
 
 resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
   name: storageAccountName
@@ -43,10 +42,6 @@ resource flexFuncApp 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsights.properties.ConnectionString
-        }
-        {
-          name: 'WEBSITE_RUN_FROM_PACKAGE'
-          value: '0'
         }
       ]
     }
@@ -88,22 +83,22 @@ resource storageRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-
   }
 }
 
-resource function 'Microsoft.Web/sites/functions@2020-12-01' = {
-    parent: flexFuncApp 
-    name: functionNameComputed
-    properties: {
-      config: {
-        disabled: false
-        bindings: [
-          {
-            type: 'eventGridTrigger'
-            name: 'event'
-            direction: 'in'
-          }
-        ]
-      }
-      files: {
-        '__init__.py': loadTextContent('__init__.py')
-      }
-    }
-}
+// resource function 'Microsoft.Web/sites/functions@2020-12-01' = {
+//     parent: flexFuncApp 
+//     name: functionNameComputed
+//     properties: {
+//       config: {
+//         disabled: false
+//         bindings: [
+//           {
+//             type: 'eventGridTrigger'
+//             name: 'event'
+//             direction: 'in'
+//           }
+//         ]
+//       }
+//       files: {
+//         '__init__.py': loadTextContent('__init__.py')
+//       }
+//     }
+// }

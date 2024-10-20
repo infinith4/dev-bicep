@@ -17,6 +17,7 @@ param hostingPlanLocation string = 'eastasia'
 param workloadName string = 'pj'
 
 param deploymentStorageContainerName string = 'testcontainer'
+param eventGridContainerName string = 'eventcontainer'
 
 
 var suffixResourceName = '-${workloadName}'
@@ -58,6 +59,19 @@ module storage 'modules/storage/storage.bicep' = {
     location: location
     tags: tags
     storageAccountType: 'Standard_LRS'
+    containerNames: [deploymentStorageContainerName]
+  }
+}
+
+
+module evetGridStorage 'modules/storage/storage.bicep' = {
+  name: 'evetGridStorage'
+  params: {
+    storageAccountName: '${abbrs.storageStorageAccounts}${enviromentResourceNameWithoutHyphen}egst${suffixResourceNameWithoutHyphen}'
+    location: location
+    tags: tags
+    storageAccountType: 'Standard_LRS'
+    containerNames: [eventGridContainerName]
   }
 }
 
@@ -108,7 +122,6 @@ module flexFunction 'modules/function/flexFunction.bicep' = if(aspSku.tier == 'F
     applicationInsightsName: appInsights.outputs.appInsightsName
     functionAppRuntime: 'python'
     functionAppRuntimeVersion: '3.11'
-    functionNameComputed: 'MyTestEventGridTrigger01'
     deploymentStorageContainerName: deploymentStorageContainerName
   }
 }
