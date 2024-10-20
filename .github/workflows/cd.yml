@@ -58,7 +58,9 @@ jobs:
       uses : actions/upload-artifact@v4
       with:
         name: ${{ inputs.artifact_name == '' && env.ARTIFACT_NAME || inputs.artifact_name }}
-        path: ./app/func
+        path: |
+          ./app/func
+          !.gitignore
         include-hidden-files: true # 隠しファイル追加オプション
 
   # deploy application
