@@ -58,11 +58,8 @@ jobs:
       uses : actions/upload-artifact@v4
       with:
         name: ${{ inputs.artifact_name == '' && env.ARTIFACT_NAME || inputs.artifact_name }}
-        path: 
-          ./app/func
-          !.gitignore
-          !README.md
-        include-hidden-files: true
+        path: .
+        include-hidden-files: true # 隠しファイル追加オプション
 
   # deploy application
   # https://docs.github.com/ja/actions/use-cases-and-examples/building-and-testing/building-and-testing-python
