@@ -26,7 +26,7 @@ env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './app/func'
   PYTHON_VERSION: '3.11'
   ARTIFACT_NAME: 'func'
-  DOWNLOAD_ARTIFACT DIRPATH: 'artf'
+  DOWNLOAD_ARTIFACT_DIRPATH: 'artf'
 
 jobs:
   upload-artifact:
