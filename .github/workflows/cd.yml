@@ -77,7 +77,9 @@ jobs:
           path: ${{ env.DOWNLOAD_ARTIFACT_DIRPATH }}
       - name: Display structure
         shell: bash
-        run: ls -R
+        run: |
+          ls -la ${{ env.DOWNLOAD_ARTIFACT_DIRPATH }}
+          ls -R
       - name: Run Azure Functions Action. ${{ inputs.environment_name == '' && 'dev' || inputs.environment_name }} environment. function name is ${{ vars.AZURE_FUNCTIONAPP_NAME }}
         uses: Azure/functions-action@v1.5.2
         id: deploy-to-function
