@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment_name == '' && 'dev' || inputs.environment_name }}
     steps:
-      - name: Download artifact for deployment jobs. ${{ inputs.environment_name == '' && 'dev' || inputs.environment_name }} environment. artifact name is ${{ inputs.artifact_name }}.
+      - name: Download artifact for deployment jobs. ${{ inputs.environment_name == '' && 'dev' || inputs.environment_name }} environment. artifact name is ${{ inputs.artifact_name == '' && env.ARTIFACT_NAME || inputs.artifact_name }}.
         uses: actions/download-artifact@v4
         with: 
           name: ${{ inputs.artifact_name == '' && env.ARTIFACT_NAME || inputs.artifact_name }}
