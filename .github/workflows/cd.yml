@@ -28,7 +28,7 @@ env:
 jobs:
   upload-artifact:
     runs-on: ubuntu-22.04
-    environment: ${{ inputs.environment_name == && dev || inputs.environment_name }}
+    environment: ${{ inputs.environment_name == '' && 'dev' || inputs.environment_name }}
     defaults:
       run:
         working-directory: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
