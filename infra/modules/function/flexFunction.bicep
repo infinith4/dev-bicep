@@ -80,6 +80,8 @@ resource flexFuncApp 'Microsoft.Web/sites@2023-12-01' = {
   }
   dependsOn:[
     appInsights
+    storage
+    eventGridStorage
   ]
 }
 
