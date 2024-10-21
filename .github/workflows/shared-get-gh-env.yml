@@ -1,0 +1,38 @@
+name: GitHubの環境名を出力
+
+on:
+  workflow_call:
+    outputs:
+      # env_nameという名前で環境名を出力するよう設定
+      env_name:
+        description: "GitHubの環境名"
+        value: ${{ jobs.get_env_name.outputs.env_name }}
+
+jobs:
+  get_env_name:
+    name: GitHubの環境名を出力
+    runs-on: ubuntu-22.4
+    outputs:
+      env_name: ${{ steps.get-env-name.outputs.env_name }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Display structure
+        shell: bash
+        run: |
+          ls -la
+          pwd
+
+      - name: GitHubの環境名を出力
+        id: get-env-name
+        # ブランチ名をもとに環境を判断＆出力
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "env_name=prd" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref_name }}" = "develop" ]; then
+            echo "env_name=stg" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" =~ ^feature/.* ]]; then
+            echo "env_name=dev" >> $GITHUB_OUTPUT
+          fi

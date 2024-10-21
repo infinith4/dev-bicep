@@ -2,21 +2,49 @@ name: build function app
 
 on:
   workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: 'Deployment target'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - stg
+          - prd
   push:
     branches:
+      - main
       - develop
+      - feature/**
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'func-dev-flex-pj'   # set this to your function app name on Azure
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'app/func'       # set this to the path to your function app project, defaults to the repository root
   PYTHON_VERSION: '3.11'                     # set this to the python version to use (e.g. '3.6', '3.7', '3.8')
 
 jobs:
-  build-application:
+  get-env-name:
+    uses: ./.github/workflows/shared-get-gh-env.yml
+  
+  check-env-name:
+    if: success()
+    needs: get-env-name
     runs-on: ubuntu-22.04
-    environment: dev
+    steps:
+      - run: |
+          exit `echo $(( ${{ needs.get-env-name.outputs.env_name == '' && 1 || 0 }} ))`
+
+
+  build-application:
+    needs:
+      [
+        get-env-name,
+        check-env-name
+      ]
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.deployment_target == '' && needs.get-env-name.outputs.env_name || inputs.deployment_target }}
     outputs:
-      artifact-name: ${{ steps.artifact-name.outputs.artifact }}
+      environment-name: ${{ steps.environment-name.outputs.environment }}
     defaults:
       run:
         working-directory: ./app/func
@@ -40,31 +68,38 @@ jobs:
       shell: bash
       run: ls -R
 
-    - name : Zip artifact for deployment
-      run : zip release.zip ./* -r
-    
-    - name: Display structure
-      shell: bash
-      run: ls -R
-
-    - name : Upload artifact for deployment jobs
-      uses : actions/upload-artifact@v4
-      with:
-        name : python-app
-        path : |
-          ./app/func/release.zip
-          !venv/
-    - name : make artifact
-      id: artifact-name
+    - name: make environment name
+      id: environment-name
       run: |
-        echo "artifact=python-app" >> $GITHUB_OUTPUT
+        echo "environment=${{ inputs.deployment_target == '' && needs.get-env-name.outputs.env_name || inputs.deployment_target }}" >> $GITHUB_OUTPUT
+
+    # - name : Zip artifact for deployment
+    #   run : zip release.zip ./* -r
+    
+    # - name: Display structure
+    #   shell: bash
+    #   run: ls -R
+
+    # - name : Upload artifact for deployment jobs
+    #   uses : actions/upload-artifact@v4
+    #   with:
+    #     name : python-app
+    #     path : |
+    #       ./app/func
+    #       !venv/
+    # - name : make artifact
+    #   id: artifact-name
+    #   run: |
+    #     echo "artifact=python-app" >> $GITHUB_OUTPUT
 # cd workflow
   call-deploy:
     needs: 
       [
+        get-env-name,
+        check-env-name,
         build-application
       ]
     uses: ./.github/workflows/cd.yml
     secrets: inherit
     with:
-      artifact_name: ${{needs.build-application.outputs.artifact-name}}
+      environment_name: ${{ needs.build-application.outputs.environment-name }}
