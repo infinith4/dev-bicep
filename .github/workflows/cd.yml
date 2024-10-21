@@ -18,9 +18,6 @@ on:
         required: true
         default: 'dev'
         type: string
-  push:
-    branches:
-      - feature/**
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './app/func'
