@@ -123,6 +123,7 @@ module flexFunction 'modules/function/flexFunction.bicep' = if(aspSku.tier == 'F
     functionAppRuntime: 'python'
     functionAppRuntimeVersion: '3.11'
     deploymentStorageContainerName: deploymentStorageContainerName
+    eventGridStorageAccountName: evetGridStorage.outputs.storageAccountName
   }
 }
 

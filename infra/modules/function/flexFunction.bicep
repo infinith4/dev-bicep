@@ -9,9 +9,14 @@ param functionAppRuntime string = 'python'
 param functionAppRuntimeVersion string = '3.11'
 param maximumInstanceCount int = 100
 param instanceMemoryMB int = 2048
+param eventGridStorageAccountName string
 
 resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
   name: storageAccountName
+}
+
+resource eventGridStorage 'Microsoft.Storage/storageAccounts@2023-01-01' existing = {
+  name: eventGridStorageAccountName
 }
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
@@ -42,6 +47,14 @@ resource flexFuncApp 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
           value: appInsights.properties.ConnectionString
+        }
+        {
+          name: 'FUNCTIONS_EXTENSION_VERSION'
+          value: '~4'
+        }
+        {
+          name: 'BLOB_CONNECTION_STRING'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${eventGridStorage.name};AccountKey=${eventGridStorage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'
         }
       ]
     }
