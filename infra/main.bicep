@@ -10,13 +10,13 @@ param location string = resourceGroup().location
 param enviromentName string = 'dev'
 var enviromentResourceNameWithoutHyphen = replace(enviromentName, '-', '')
 
-@allowed(['eastasia', 'eastus'])
-param hostingPlanLocation string = 'eastasia'
+@allowed(['northeurope', 'southeastasia', 'eastasia', 'eastus2', 'southcentralus', 'australiaeast', 'eastus', 'westus2' 'uksouth', 'eastus2euap', 'westus3', 'swedencentral'])
+param hostingPlanLocation string = 'eastus2'
 
 @description('The workload name. Replaces {workloadName} in namingConvention.')
 param workloadName string = 'pj'
 
-param deploymentStorageContainerName string = 'testcontainer'
+param deploymentStorageContainerName string = 'app-pkg-func'
 param eventGridContainerName string = 'eventcontainer'
 
 

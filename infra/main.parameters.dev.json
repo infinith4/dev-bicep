@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-      "value": "eastus"
+      "value": "eastus2"
     },
     "enviromentName": {
       "value": "dev"
     },
     "hostingPlanLocation": {
-      "value": "eastus"
+      "value": "eastus2"
     },
     "workloadName": {
       "value": "pj"

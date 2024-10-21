@@ -48,6 +48,10 @@ az deployment group create \
 ```
 
 
+az functionapp list-flexconsumption-locations --output table
+
+
+
 az group list
 
 ```
